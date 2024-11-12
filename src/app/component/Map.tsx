@@ -1,10 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Konva from "konva";
+// import Konva from "konva";
 import { Stage, Layer, Line, Shape } from "react-konva";
 import FileUploader from "./FileUploader";
 import { useSnapshot } from "valtio";
 import { store } from "../store/store";
+import { Button } from "@/components/ui/button";
 
 interface ShapeData {
   color?: string;
@@ -45,32 +46,46 @@ const Map = () => {
     }
   }, [mapData]);
 
-  const handleStageZoom = (e: Konva.KonvaEventObject<WheelEvent>): void => {
-    e.evt.preventDefault();
+  // const handleStageZoom = (e: Konva.KonvaEventObject<WheelEvent>): void => {
+  //   e.evt.preventDefault();
 
-    const scaleBy = 1.02;
-    const stage = e.target.getStage();
-    if (stage) {
-      const oldScale = stage.scaleX();
-      const pointerPosition = stage.getPointerPosition();
+  //   const scaleBy = 1.02;
+  //   const stage = e.target.getStage();
+  //   if (stage) {
+  //     const oldScale = stage.scaleX();
+  //     const pointerPosition = stage.getPointerPosition();
 
-      if (!pointerPosition) {
-        return;
-      }
+  //     if (!pointerPosition) {
+  //       return;
+  //     }
 
-      const mousePointTo = {
-        x: pointerPosition.x / oldScale - stage.x() / oldScale,
-        y: pointerPosition.y / oldScale - stage.y() / oldScale,
-      };
+  //     const mousePointTo = {
+  //       x: pointerPosition.x / oldScale - stage.x() / oldScale,
+  //       y: pointerPosition.y / oldScale - stage.y() / oldScale,
+  //     };
 
-      const newScale =
-        e.evt.deltaY < 0 ? oldScale * scaleBy : oldScale / scaleBy;
-      setStage({
-        scale: newScale,
-        x: (pointerPosition.x / newScale - mousePointTo.x) * newScale,
-        y: (pointerPosition.y / newScale - mousePointTo.y) * newScale,
-      });
-    }
+  //     const newScale =
+  //       e.evt.deltaY < 0 ? oldScale * scaleBy : oldScale / scaleBy;
+  //     setStage({
+  //       scale: newScale,
+  //       x: (pointerPosition.x / newScale - mousePointTo.x) * newScale,
+  //       y: (pointerPosition.y / newScale - mousePointTo.y) * newScale,
+  //     });
+  //   }
+  // };
+
+  const handleZoomIn = () => {
+    setStage((prev) => ({
+      ...prev,
+      scale: prev.scale * 1.2, // Increase scale by 20%
+    }));
+  };
+
+  const handleZoomOut = () => {
+    setStage((prev) => ({
+      ...prev,
+      scale: prev.scale / 1.2, // Decrease scale by 20%
+    }));
   };
 
   const handleMouseEnter = (index: number) => setHoveredShape(index); // Set hovered shape index
@@ -86,6 +101,14 @@ const Map = () => {
         Masterplan Explorer
         <span className="font-thin text-gray-500 ml-4">{projectName}</span>
       </div>
+      <div className="absolute bottom-4 left-4 flex space-x-2 z-50">
+        <Button variant="outline" onClick={handleZoomIn}>
+          +
+        </Button>
+        <Button variant="outline" onClick={handleZoomOut}>
+          -
+        </Button>
+      </div>
       <div className="flex items-center justify-center min-h-screen">
         {!mapData ? (
           <FileUploader onUpload={handleFileUpload} />
@@ -93,7 +116,7 @@ const Map = () => {
           <Stage
             width={window.innerWidth}
             height={window.innerHeight}
-            onWheel={handleStageZoom}
+            // onWheel={handleStageZoom}
             scaleX={zoomStage.scale}
             scaleY={zoomStage.scale}
             x={zoomStage.x}
