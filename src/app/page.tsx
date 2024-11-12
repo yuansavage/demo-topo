@@ -1,6 +1,6 @@
 "use server";
 import dynamic from "next/dynamic";
-const MapComponent = dynamic(() => import("../../component/Map"), {
+const MapComponent = dynamic(() => import("./component/Map"), {
   ssr: false,
 });
 import { Button } from "@/components/ui/button";

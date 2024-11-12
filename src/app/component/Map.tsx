@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Konva from "konva";
 import { Stage, Layer, Line, Shape } from "react-konva";
-import { data } from "../src/app/data";
+import { data } from "../data";
 
 interface ShapeData {
   color?: string;
